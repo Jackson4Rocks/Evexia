@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ic_launcher_background">#171916</color>
+    <color name="widget_background_color">#F7F5EF</color>
+    <color name="widget_text">#171916</color>
+    <color name="widget_muted">#74756F</color>
+    <color name="widget_accent">#667C00</color>
+    <color name="widget_border">#1F171916</color>
+</resources>
