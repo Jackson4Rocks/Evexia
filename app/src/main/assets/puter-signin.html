@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Connect Evexia to Puter</title>
+    <style>
+        :root { color-scheme: light dark; font: 16px system-ui, sans-serif; }
+        body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: Canvas; color: CanvasText; }
+        main { width: min(88vw, 420px); padding: 28px; border-radius: 24px; }
+        h1 { margin-top: 0; }
+        p { line-height: 1.5; opacity: .78; }
+        button { width: 100%; padding: 14px; border: 0; border-radius: 14px; font: inherit; }
+        button:disabled { opacity: .5; }
+        #status { min-height: 1.5em; }
+        footer { margin-top: 24px; text-align: center; font-size: 13px; }
+    </style>
+</head>
+<body>
+<main>
+    <h1>Connect to Puter</h1>
+    <p>Sign in to your Puter account to use Evexia's online AI. Puter handles your AI usage; no API key is needed.</p>
+    <button id="connect">Continue with Puter</button>
+    <button id="cancel" style="margin-top: 10px">Cancel</button>
+    <p id="status" role="status">Loading Puter…</p>
+    <footer><a href="https://developer.puter.com" target="_blank" rel="noopener">Powered by Puter</a></footer>
+</main>
+<script
+    async
+    src="https://js.puter.com/v2/"
+    onload="document.getElementById('status').textContent = 'Ready to connect.'"
+    onerror="document.getElementById('status').textContent = 'Puter could not load. Check your internet connection, then tap Continue to retry.'">
+</script>
+<script>
+    document.getElementById("connect").addEventListener("click", async () => {
+        const status = document.getElementById("status");
+        status.textContent = "Waiting for Puter sign-in…";
+        try {
+            if (!window.puter?.auth?.signIn) {
+                throw new Error("Puter could not load. Check your internet connection and try again.");
+            }
+            await puter.auth.signIn();
+            const signedIn = await puter.auth.isSignedIn();
+            Evexia.onStatus(signedIn, null);
+            status.textContent = signedIn ? "Connected. You can return to Evexia." : "Sign-in was not completed.";
+        } catch (error) {
+            status.textContent = error?.msg || error?.message || "Sign-in was cancelled. Try again.";
+        }
+    });
+
+    document.getElementById("cancel").addEventListener("click", () => Evexia.onSignInClosed());
+</script>
+</body>
+</html>
